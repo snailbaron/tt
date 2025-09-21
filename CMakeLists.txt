@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.24)
 
 project(tt)
 
@@ -14,7 +14,9 @@ ExternalProject_Add(libxml2
     URL_HASH SHA256=5abc766497c5b1d6d99231f662e30c99402a90d03b06c67b62d6c1179dedd561
     DOWNLOAD_DIR "${dl}"
 
+    CMAKE_GENERATOR Ninja
     CMAKE_CACHE_ARGS
+        -DBUILD_SHARED_LIBS:BOOL=OFF
         -DCMAKE_BUILD_TYPE:STRING=Release
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/libxml2
 )
@@ -26,6 +28,7 @@ ExternalProject_Add(zlib
 
     CMAKE_GENERATOR Ninja
     CMAKE_CACHE_ARGS
+        -DBUILD_SHARED_LIBS:BOOL=OFF
         -DCMAKE_BUILD_TYPE:STRING=Release
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/zlib
 )
@@ -40,6 +43,8 @@ ExternalProject_Add(zstd
     CMAKE_CACHE_ARGS
         -DCMAKE_BUILD_TYPE:STRING=Release
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/zstd
+        -DZSTD_BUILD_SHARED:BOOL=OFF
+        -DZSTD_BUILD_STATIC:BOOL=ON
 )
 
 message(STATUS "TT_USE_CCACHE: ${TT_USE_CCACHE}")
@@ -73,6 +78,12 @@ ExternalProject_Add(llvm-mid
         -DCLANG_DEFAULT_CXX_STDLIB:STRING=libc++
         -DCLANG_DEFAULT_LINKER:STRING=lld
         -DCOMPILER_RT_BUILD_BUILTINS:BOOL=ON
+
+        -DZLIB_USE_STATIC_LIBS:BOOL=ON
+        -DLLVM_USE_STATIC_ZSTD:BOOL=ON
+        -DZLIB_ROOT:PATH=${out}/zlib
+        -DZSTD_ROOT:PATH=${out}/zstd
+        -DLIBXML2_ROOT:PATH=${out}/libxml2
 
     LOG_CONFIGURE ON
     LOG_BUILD ON
@@ -119,6 +130,17 @@ ExternalProject_Add(llvm-final
 
         -DLIBUNWIND_USE_COMPILER_RT:BOOL=ON
         -DCOMPILER_RT_BUILD_BUILTINS:BOOL=ON
+
+        -DCLANG_DEFAULT_RTLIB:STRING=compiler-rt
+        -DCLANG_DEFAULT_UNWINDLIB:STRING=libunwind
+        -DCLANG_DEFAULT_CXX_STDLIB:STRING=libc++
+        -DCLANG_DEFAULT_LINKER:STRING=lld
+
+        -DZLIB_USE_STATIC_LIBS:BOOL=ON
+        -DLLVM_USE_STATIC_ZSTD:BOOL=ON
+        -DZLIB_ROOT:PATH=${out}/zlib
+        -DZSTD_ROOT:PATH=${out}/zstd
+        -DLIBXML2_ROOT:PATH=${out}/libxml2
 
     LOG_CONFIGURE ON
     LOG_BUILD ON
