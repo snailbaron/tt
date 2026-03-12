@@ -78,7 +78,7 @@ ExternalProject_Add(libxml2
         -DCMAKE_C_COMPILER:STRING=${out}/llvm-mid/bin/clang
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/libxml2
 )
-ExternalProject_Add_StepDependencies(libxml2 build llvm-mid)
+ExternalProject_Add_StepDependencies(libxml2 configure llvm-mid)
 
 ExternalProject_Add(zlib
     URL ${zlib_url}
@@ -93,7 +93,7 @@ ExternalProject_Add(zlib
         -DCMAKE_C_COMPILER:STRING=${out}/llvm-mid/bin/clang
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/zlib
 )
-ExternalProject_Add_StepDependencies(zlib build llvm-mid)
+ExternalProject_Add_StepDependencies(zlib configure llvm-mid)
 
 ExternalProject_Add(zstd
     URL ${zstd_url}
@@ -111,7 +111,7 @@ ExternalProject_Add(zstd
         -DZSTD_BUILD_SHARED:BOOL=OFF
         -DZSTD_BUILD_STATIC:BOOL=ON
 )
-ExternalProject_Add_StepDependencies(zstd build llvm-mid)
+ExternalProject_Add_StepDependencies(zstd configure llvm-mid)
 
 ExternalProject_Add(llvm-final
     URL ${llvm_url}
@@ -171,4 +171,5 @@ ExternalProject_Add(llvm-final
         ninja install-distribution
     INSTALL_COMMAND ""
 )
-ExternalProject_Add_StepDependencies(llvm-final build llvm-mid libxml2 zlib zstd)
+ExternalProject_Add_StepDependencies(llvm-final configure llvm-mid)
+ExternalProject_Add_StepDependencies(llvm-final build libxml2 zlib zstd)
