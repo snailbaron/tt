@@ -12,7 +12,12 @@ set(llvm_hash SHA256=5f048351ee63050d7fa45b6a1160768fb222a8d306a89e1344515ef7a4b
 set(libxml2_url "https://download.gnome.org/sources/libxml2/2.15/libxml2-2.15.0.tar.xz")
 set(libxml2_hash SHA256=5abc766497c5b1d6d99231f662e30c99402a90d03b06c67b62d6c1179dedd561)
 
-set(zlib_url "https://zlib.net/zlib-1.3.1.tar.xz")
+# GitHub URLs are more reliable, as old releases don't get deleted. The
+# original zlib.net URL is left mostly for traceability.
+set(zlib_urls
+    "https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.xz"
+    "https://zlib.net/zlib-1.3.1.tar.xz"
+)
 set(zlib_hash SHA256=38ef96b8dfe510d42707d9c781877914792541133e1870841463bfa73f883e32)
 
 set(zstd_url "https://github.com/facebook/zstd/archive/refs/tags/v1.5.7.tar.gz")
@@ -78,7 +83,7 @@ ExternalProject_Add(libxml2
 ExternalProject_Add_StepDependencies(libxml2 configure llvm-mid)
 
 ExternalProject_Add(zlib
-    URL ${zlib_url}
+    URL ${zlib_urls}
     URL_HASH ${zlib_hash}
     DOWNLOAD_DIR "${dl}"
 
