@@ -26,6 +26,31 @@ set(zstd_hash SHA256=37d7284556b20954e56e1ca85b80226768902e2edabd3b649e9e72c0c90
 set(out "${CMAKE_SOURCE_DIR}/install")
 set(dl "${CMAKE_SOURCE_DIR}/download")
 
+set(llvm_options_components_to_build
+    -DLLVM_DISTRIBUTION_COMPONENTS:STRING=clang;clang-resource-headers;builtins;runtimes;lld
+    -DLLVM_ENABLE_PROJECTS:STRING=clang;lld
+    -DLLVM_ENABLE_RUNTIMES:STRING=compiler-rt;libcxx;libcxxabi;libunwind
+    -DLLVM_TARGETS_TO_BUILD:STRING=X86
+)
+
+set(llvm_options_default_tools
+    -DCLANG_DEFAULT_CXX_STDLIB:STRING=libc++
+    -DCLANG_DEFAULT_LINKER:STRING=lld
+    -DCLANG_DEFAULT_RTLIB:STRING=compiler-rt
+    -DCLANG_DEFAULT_UNWINDLIB:STRING=libunwind
+)
+
+set(llvm_options_runtime_linkage
+    -DCOMPILER_RT_BUILD_BUILTINS:BOOL=ON
+    -DLIBCXXABI_ENABLE_SHARED:BOOL=OFF
+    -DLIBCXXABI_ENABLE_STATIC_UNWINDER:BOOL=ON
+    -DLIBCXXABI_STATICALLY_LINK_UNWINDER_IN_STATIC_LIBRARY:BOOL=ON
+    -DLIBCXX_ENABLE_ABI_LINKER_SCRIPT:BOOL=OFF
+    -DLIBCXX_ENABLE_SHARED:BOOL=OFF
+    -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY:BOOL=ON
+    -DLIBUNWIND_ENABLE_SHARED:BOOL=OFF
+)
+
 ExternalProject_Add(llvm-mid
     URL ${llvm_url}
     URL_HASH ${llvm_hash}
@@ -38,23 +63,9 @@ ExternalProject_Add(llvm-mid
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/llvm-mid
         -DLLVM_CCACHE_BUILD:BOOL=${TT_USE_CCACHE}
 
-        -DLLVM_DISTRIBUTION_COMPONENTS:STRING=clang;clang-resource-headers;builtins;runtimes;lld
-        -DLLVM_ENABLE_PROJECTS:STRING=clang;lld
-        -DLLVM_ENABLE_RUNTIMES:STRING=compiler-rt;libcxx;libcxxabi;libunwind
-        -DLLVM_TARGETS_TO_BUILD:STRING=X86
-
-        -DCLANG_DEFAULT_CXX_STDLIB:STRING=libc++
-        -DCLANG_DEFAULT_LINKER:STRING=lld
-        -DCLANG_DEFAULT_RTLIB:STRING=compiler-rt
-        -DCLANG_DEFAULT_UNWINDLIB:STRING=libunwind
-        -DCOMPILER_RT_BUILD_BUILTINS:BOOL=ON
-        -DLIBCXXABI_ENABLE_SHARED:BOOL=OFF
-        -DLIBCXXABI_ENABLE_STATIC_UNWINDER:BOOL=ON
-        -DLIBCXXABI_STATICALLY_LINK_UNWINDER_IN_STATIC_LIBRARY:BOOL=ON
-        -DLIBCXX_ENABLE_ABI_LINKER_SCRIPT:BOOL=OFF
-        -DLIBCXX_ENABLE_SHARED:BOOL=OFF
-        -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY:BOOL=ON
-        -DLIBUNWIND_ENABLE_SHARED:BOOL=OFF
+        ${llvm_options_components_to_build}
+        ${llvm_options_default_tools}
+        ${llvm_options_runtime_linkage}
 
         -DLLVM_ENABLE_LIBXML2:STRING=OFF
         -DLLVM_ENABLE_ZLIB:STRING=OFF
@@ -142,26 +153,13 @@ ExternalProject_Add(llvm-final
         -DCMAKE_CXX_COMPILER:STRING=${out}/llvm-mid/bin/clang++
         -DCMAKE_C_COMPILER:STRING=${out}/llvm-mid/bin/clang
 
-        -DLLVM_DISTRIBUTION_COMPONENTS:STRING=clang;clang-resource-headers;builtins;runtimes;lld
-        -DLLVM_ENABLE_PROJECTS:STRING=clang;lld
-        -DLLVM_ENABLE_RUNTIMES:STRING=compiler-rt;libcxx;libcxxabi;libunwind
-        -DLLVM_TARGETS_TO_BUILD:STRING=X86
+        ${llvm_options_components_to_build}
+        ${llvm_options_default_tools}
+        ${llvm_options_runtime_linkage}
 
-        -DCLANG_DEFAULT_CXX_STDLIB:STRING=libc++
-        -DCLANG_DEFAULT_LINKER:STRING=lld
-        -DCLANG_DEFAULT_RTLIB:STRING=compiler-rt
-        -DCLANG_DEFAULT_UNWINDLIB:STRING=libunwind
-        -DCOMPILER_RT_BUILD_BUILTINS:BOOL=ON
-        -DLIBCXXABI_ENABLE_SHARED:BOOL=OFF
-        -DLIBCXXABI_ENABLE_STATIC_UNWINDER:BOOL=ON
-        -DLIBCXXABI_STATICALLY_LINK_UNWINDER_IN_STATIC_LIBRARY:BOOL=ON
         -DLIBCXXABI_USE_COMPILER_RT:BOOL=ON
         -DLIBCXXABI_USE_LLVM_UNWINDER:BOOL=ON
-        -DLIBCXX_ENABLE_ABI_LINKER_SCRIPT:BOOL=OFF
-        -DLIBCXX_ENABLE_SHARED:BOOL=OFF
-        -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY:BOOL=ON
         -DLIBCXX_USE_COMPILER_RT:BOOL=ON
-        -DLIBUNWIND_ENABLE_SHARED:BOOL=OFF
         -DLIBUNWIND_USE_COMPILER_RT:BOOL=ON
         -DLLVM_ENABLE_LIBCXX:BOOL=ON
         -DLLVM_ENABLE_LLD:BOOL=ON
