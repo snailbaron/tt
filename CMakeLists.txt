@@ -15,10 +15,10 @@ set(libxml2_hash SHA256=5abc766497c5b1d6d99231f662e30c99402a90d03b06c67b62d6c117
 # GitHub URLs are more reliable, as old releases don't get deleted. The
 # original zlib.net URL is left mostly for traceability.
 set(zlib_urls
-    "https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.xz"
-    "https://zlib.net/zlib-1.3.1.tar.xz"
+    "https://github.com/madler/zlib/releases/download/v1.3.2/zlib-1.3.2.tar.xz"
+    "https://zlib.net/zlib-1.3.2.tar.xz"
 )
-set(zlib_hash SHA256=38ef96b8dfe510d42707d9c781877914792541133e1870841463bfa73f883e32)
+set(zlib_hash SHA256=d7a0654783a4da529d1bb793b7ad9c3318020af77667bcae35f95d0e42a792f3)
 
 set(zstd_url "https://github.com/facebook/zstd/archive/refs/tags/v1.5.7.tar.gz")
 set(zstd_hash SHA256=37d7284556b20954e56e1ca85b80226768902e2edabd3b649e9e72c0c9012ee3)
@@ -94,6 +94,9 @@ ExternalProject_Add(zlib
         -DCMAKE_CXX_COMPILER:STRING=${out}/llvm-mid/bin/clang++
         -DCMAKE_C_COMPILER:STRING=${out}/llvm-mid/bin/clang
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/zlib
+
+        -DZLIB_BUILD_TESTING:BOOL=OFF
+        -DZLIB_BUILD_SHARED:BOOL=OFF
 )
 ExternalProject_Add_StepDependencies(zlib configure llvm-mid)
 
