@@ -79,6 +79,10 @@ ExternalProject_Add(libxml2
         -DCMAKE_CXX_COMPILER:STRING=${out}/llvm-mid/bin/clang++
         -DCMAKE_C_COMPILER:STRING=${out}/llvm-mid/bin/clang
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/libxml2
+
+        -DLIBXML2_WITH_ICONV:BOOL=OFF
+        -DLIBXML2_WITH_PROGRAMS:BOOL=OFF
+        -DLIBXML2_WITH_TESTS:BOOL=OFF
 )
 ExternalProject_Add_StepDependencies(libxml2 configure llvm-mid)
 
