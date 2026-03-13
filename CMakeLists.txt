@@ -115,6 +115,10 @@ ExternalProject_Add(zstd
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/zstd
         -DZSTD_BUILD_SHARED:BOOL=OFF
         -DZSTD_BUILD_STATIC:BOOL=ON
+
+        -DZSTD_LEGACY_SUPPORT:BOOL=OFF
+        -DZSTD_BUILD_PROGRAMS:BOOL=OFF
+        -DZSTD_BUILD_TESTS:BOOL=OFF
 )
 ExternalProject_Add_StepDependencies(zstd configure llvm-mid)
 
