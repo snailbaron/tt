@@ -1,12 +1,13 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/ci.yaml
-      - CMakeLists.txt
+  #push:
+  #  branches:
+  #    - main
+  #  paths:
+  #    - .github/workflows/ci.yaml
+  #    - CMakeLists.txt
+  workflow_dispatch:
 
 permissions:
   contents: write  # release publishing
@@ -31,4 +32,4 @@ jobs:
 
           cp -r install/llvm-final "${name}"
           tar -cvJf "${name}.tar.xz" "${name}"
-          gh release create "${commit}" "${name}.tar.xz" --notes=
+          #gh release create "${commit}" "${name}.tar.xz" --notes=
