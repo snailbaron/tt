@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(tt)
+project(tt LANGUAGES NONE)
 
 option(TT_USE_CCACHE "use ccache from the host system")
 
