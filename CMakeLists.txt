@@ -27,7 +27,7 @@ set(out "${CMAKE_SOURCE_DIR}/install")
 set(dl "${CMAKE_SOURCE_DIR}/download")
 
 set(llvm_options_components_to_build
-    -DLLVM_DISTRIBUTION_COMPONENTS:STRING=clang;clang-resource-headers;builtins;runtimes;lld
+    -DLLVM_DISTRIBUTION_COMPONENTS:STRING=clang;clang-resource-headers;builtins;runtimes;lld;llvm-ar
     -DLLVM_ENABLE_PROJECTS:STRING=clang;lld
     -DLLVM_ENABLE_RUNTIMES:STRING=compiler-rt;libcxx;libcxxabi;libunwind
     -DLLVM_TARGETS_TO_BUILD:STRING=X86
@@ -49,6 +49,12 @@ set(llvm_options_runtime_linkage
     -DLIBCXX_ENABLE_SHARED:BOOL=OFF
     -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY:BOOL=ON
     -DLIBUNWIND_ENABLE_SHARED:BOOL=OFF
+)
+
+set(llvm_options_build_with_llvm_mid
+    -DCMAKE_CXX_COMPILER:STRING=${out}/llvm-mid/bin/clang++
+    -DCMAKE_C_COMPILER:STRING=${out}/llvm-mid/bin/clang
+    -DCMAKE_AR:STRING=${out}/llvm-mid/bin/llvm-ar
 )
 
 ExternalProject_Add(llvm-mid
@@ -87,8 +93,9 @@ ExternalProject_Add(libxml2
     CMAKE_CACHE_ARGS
         -DBUILD_SHARED_LIBS:BOOL=OFF
         -DCMAKE_BUILD_TYPE:STRING=Release
-        -DCMAKE_CXX_COMPILER:STRING=${out}/llvm-mid/bin/clang++
-        -DCMAKE_C_COMPILER:STRING=${out}/llvm-mid/bin/clang
+
+        ${llvm_options_build_with_llvm_mid}
+
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/libxml2
 
         -DLIBXML2_WITH_ICONV:BOOL=OFF
@@ -106,8 +113,9 @@ ExternalProject_Add(zlib
     CMAKE_CACHE_ARGS
         -DBUILD_SHARED_LIBS:BOOL=OFF
         -DCMAKE_BUILD_TYPE:STRING=Release
-        -DCMAKE_CXX_COMPILER:STRING=${out}/llvm-mid/bin/clang++
-        -DCMAKE_C_COMPILER:STRING=${out}/llvm-mid/bin/clang
+
+        ${llvm_options_build_with_llvm_mid}
+
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/zlib
 
         -DZLIB_BUILD_TESTING:BOOL=OFF
@@ -125,8 +133,9 @@ ExternalProject_Add(zstd
     CMAKE_CACHE_ARGS
         -DBUILD_SHARED_LIBS:BOOL=OFF
         -DCMAKE_BUILD_TYPE:STRING=Release
-        -DCMAKE_CXX_COMPILER:STRING=${out}/llvm-mid/bin/clang++
-        -DCMAKE_C_COMPILER:STRING=${out}/llvm-mid/bin/clang
+
+        ${llvm_options_build_with_llvm_mid}
+
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/zstd
         -DZSTD_BUILD_SHARED:BOOL=OFF
         -DZSTD_BUILD_STATIC:BOOL=ON
@@ -150,8 +159,7 @@ ExternalProject_Add(llvm-final
         -DCMAKE_SKIP_RPATH:BOOL=ON
         -DLLVM_CCACHE_BUILD:BOOL=${TT_USE_CCACHE}
 
-        -DCMAKE_CXX_COMPILER:STRING=${out}/llvm-mid/bin/clang++
-        -DCMAKE_C_COMPILER:STRING=${out}/llvm-mid/bin/clang
+        ${llvm_options_build_with_llvm_mid}
 
         ${llvm_options_components_to_build}
         ${llvm_options_default_tools}
