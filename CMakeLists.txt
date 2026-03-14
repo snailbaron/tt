@@ -178,6 +178,8 @@ ExternalProject_Add(llvm-final
         -DLLVM_ENABLE_ZSTD:STRING=FORCE_ON
         -DZSTD_ROOT:PATH=${out}/zstd
 
+        -DLLVM_ENABLE_LIBEDIT:BOOL=OFF
+
     LOG_CONFIGURE ON
     LOG_BUILD ON
 
