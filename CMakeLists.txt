@@ -202,3 +202,13 @@ ExternalProject_Add(llvm-final
 )
 ExternalProject_Add_StepDependencies(llvm-final configure llvm-mid)
 ExternalProject_Add_StepDependencies(llvm-final build libxml2 zlib zstd)
+
+message(STATUS "")
+message(STATUS "tt configuration")
+message(STATUS "----------------")
+if(TT_USE_CCACHE)
+    message(STATUS "ccache: enabled")
+else()
+    message(STATUS "ccache: disabled")
+endif()
+message(STATUS "----------------")
