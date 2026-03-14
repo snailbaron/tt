@@ -171,8 +171,11 @@ ExternalProject_Add(llvm-final
         -DLIBUNWIND_USE_COMPILER_RT:BOOL=ON
         -DLLVM_ENABLE_LIBCXX:BOOL=ON
         -DLLVM_ENABLE_LLD:BOOL=ON
-        -DLLVM_ENABLE_LTO:BOOL=ON
         -DLLVM_STATIC_LINK_CXX_STDLIB:BOOL=ON
+
+        # Using thin LTO, mostly to build in CI.
+        # https://llvm.org/docs/CMake.html
+        -DLLVM_ENABLE_LTO:STRING=Thin
 
         -DLLVM_USE_STATIC_ZSTD:BOOL=ON
         -DZLIB_USE_STATIC_LIBS:BOOL=ON
