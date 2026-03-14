@@ -1,35 +1,57 @@
-name: CI
+name: Build
 
 on:
-  #push:
-  #  branches:
-  #    - main
-  #  paths:
-  #    - .github/workflows/ci.yaml
-  #    - CMakeLists.txt
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/ci.yaml
+      - CMakeLists.txt
   workflow_dispatch:
 
-permissions:
-  contents: write  # release publishing
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
-  build-llvm:
-    name: Build LLVM
+  build:
+    name: Build
     runs-on: [ubuntu-24.04]
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v6
       - name: CMake configure
         run: cmake -B build -G Ninja
       - name: CMake build
         run: cmake --build build/ --target llvm-final
-      - name: Package binaries
+      - name: Create the archive
+        run: |
+          cp -r install/llvm-final tt
+          tar -cvJf tt.tar.xz tt/
+      - name: Upload the archive
+        uses: actions/upload-artifact@v7
+        with:
+          name: tt
+          path: tt.tar.xz
+
+  release:
+    name: Release
+    needs: build
+    runs-on: [ubuntu-24.04]
+    environment: release
+    permissions:
+      contents: write  # release publishing
+    steps:
+      - name: Download the archive
+        uses: actions/download-artifact@v8
+        with:
+          name: tt
+      - name: Create a new release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          commit=$(git rev-parse --short HEAD)
-          name="llvm-${commit}"
+          latest_release=$(gh release list --limit 1 --json tagName -q '.[0].tagName')
+          next_release=$(( ${latest_release:-0} + 1 ))
 
-          cp -r install/llvm-final "${name}"
-          tar -cvJf "${name}.tar.xz" "${name}"
-          #gh release create "${commit}" "${name}.tar.xz" --notes=
+          mv tt.tar.xz "tt-${next_release}.tar.xz"
+          gh release create "${next_release}" "tt-${next_release}.tar.xz" --notes=
