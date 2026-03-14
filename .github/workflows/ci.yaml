@@ -20,14 +20,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      - name: Set up ccache
+        run: |
+          sudo apt-get install -y ccache
+          ccache -M 8G
+          ccache -o compiler_check=content
+      - name: Restore ccache
+        uses: actions/cache@v5
+        with:
+          key: ccache-${{ hashFiles('CMakeLists.txt') }}
+          restore-keys: ccache-
+          path: ~/.cache/ccache
       - name: CMake configure
-        run: cmake -B build -G Ninja
+        run: cmake -B build -G Ninja -D TT_USE_CCACHE=ON
       - name: CMake build
         run: cmake --build build/ --target llvm-final
       - name: Create the archive
         run: |
           cp -r install/llvm-final tt
           tar -cvJf tt.tar.xz tt/
+      - name: Print ccache stats
+        run: ccache -s
       - name: Upload the archive
         uses: actions/upload-artifact@v7
         with:
