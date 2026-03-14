@@ -169,8 +169,13 @@ ExternalProject_Add(llvm-final
         -DLLVM_USE_STATIC_ZSTD:BOOL=ON
         -DZLIB_USE_STATIC_LIBS:BOOL=ON
 
+        -DLLVM_ENABLE_LIBXML2:STRING=FORCE_ON
         -DLIBXML2_ROOT:PATH=${out}/libxml2
+
+        -DLLVM_ENABLE_ZLIB:STRING=FORCE_ON
         -DZLIB_ROOT:PATH=${out}/zlib
+
+        -DLLVM_ENABLE_ZSTD:STRING=FORCE_ON
         -DZSTD_ROOT:PATH=${out}/zstd
 
     LOG_CONFIGURE ON
