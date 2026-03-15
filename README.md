@@ -1,6 +1,6 @@
 # `tt` is for "Tools of the Trade"
 
-This is build of clang and `lld` using _mostly_ LLVM stuff statically built-in. Specifically:
+This is a build of clang and `lld` using _mostly_ LLVM stuff statically built-in. Specifically:
 * LLVM's `libc++`, compiler runtime and unwinder are statically built into clang, and used by default (without `-stdlib=libc++` and others).
 * `lld` is used by default.
 
