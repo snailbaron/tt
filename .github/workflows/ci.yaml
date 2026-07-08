@@ -32,7 +32,7 @@ jobs:
           restore-keys: ccache-
           path: ~/.cache/ccache
       - name: CMake configure
-        run: cmake -B build -G Ninja -D TT_USE_CCACHE=ON
+        run: cmake -B build -G Ninja -D TT_USE_CCACHE=ON -D CMAKE_BUILD_TYPE=Release
       - name: CMake build
         run: cmake --build build/ --target llvm-final
       - name: Create the archive
