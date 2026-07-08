@@ -26,9 +26,16 @@ set(zstd_hash SHA256=37d7284556b20954e56e1ca85b80226768902e2edabd3b649e9e72c0c90
 set(out "${CMAKE_SOURCE_DIR}/install")
 set(dl "${CMAKE_SOURCE_DIR}/download")
 
-set(llvm_options_components_to_build
+set(llvm_options_components_to_build_mid
     -DLLVM_DISTRIBUTION_COMPONENTS:STRING=clang;clang-resource-headers;builtins;runtimes;lld;llvm-ar
     -DLLVM_ENABLE_PROJECTS:STRING=clang;lld
+    -DLLVM_ENABLE_RUNTIMES:STRING=compiler-rt;libcxx;libcxxabi;libunwind
+    -DLLVM_TARGETS_TO_BUILD:STRING=X86
+)
+
+set(llvm_options_components_to_build_final
+    -DLLVM_DISTRIBUTION_COMPONENTS:STRING=clang;clang-resource-headers;builtins;runtimes;lld;llvm-ar;clang-format;clang-tidy;clangd
+    -DLLVM_ENABLE_PROJECTS:STRING=clang;lld;clang-tools-extra
     -DLLVM_ENABLE_RUNTIMES:STRING=compiler-rt;libcxx;libcxxabi;libunwind
     -DLLVM_TARGETS_TO_BUILD:STRING=X86
 )
@@ -69,7 +76,7 @@ ExternalProject_Add(llvm-mid
         -DCMAKE_INSTALL_PREFIX:STRING=${out}/llvm-mid
         -DLLVM_CCACHE_BUILD:BOOL=${TT_USE_CCACHE}
 
-        ${llvm_options_components_to_build}
+        ${llvm_options_components_to_build_mid}
         ${llvm_options_default_tools}
         ${llvm_options_runtime_linkage}
 
@@ -161,7 +168,7 @@ ExternalProject_Add(llvm-final
 
         ${llvm_options_build_with_llvm_mid}
 
-        ${llvm_options_components_to_build}
+        ${llvm_options_components_to_build_final}
         ${llvm_options_default_tools}
         ${llvm_options_runtime_linkage}
 
