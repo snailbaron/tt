@@ -6,11 +6,11 @@ option(TT_USE_CCACHE "use ccache from the host system")
 
 include(ExternalProject)
 
-set(llvm_url "https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-21.1.1.tar.gz")
-set(llvm_hash SHA256=5f048351ee63050d7fa45b6a1160768fb222a8d306a89e1344515ef7a4bcd278)
+set(llvm_url "https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-22.1.8.tar.gz")
+set(llvm_hash SHA256=ad18b70e287954c3d62bc7e0b86e7b7af2adf87bcfce21c15fe717f101d7aace)
 
-set(libxml2_url "https://download.gnome.org/sources/libxml2/2.15/libxml2-2.15.0.tar.xz")
-set(libxml2_hash SHA256=5abc766497c5b1d6d99231f662e30c99402a90d03b06c67b62d6c1179dedd561)
+set(libxml2_url "https://download.gnome.org/sources/libxml2/2.15/libxml2-2.15.3.tar.xz")
+set(libxml2_hash SHA256=78262a6e7ac170d6528ebfe2efccdf220191a5af6a6cd61ea4a9a9a5042c7a07)
 
 # GitHub URLs are more reliable, as old releases don't get deleted. The
 # original zlib.net URL is left mostly for traceability.
