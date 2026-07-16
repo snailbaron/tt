@@ -34,7 +34,7 @@ set(llvm_options_components_to_build_mid
 )
 
 set(llvm_options_components_to_build_final
-    -DLLVM_DISTRIBUTION_COMPONENTS:STRING=clang;clang-resource-headers;builtins;runtimes;lld;llvm-ar;clang-format;clang-tidy;clangd
+    -DLLVM_DISTRIBUTION_COMPONENTS:STRING=builtins;clang;clang-format;clang-resource-headers;clang-tidy;clangd;lld;llvm-ar;llvm-cov;llvm-cxxfilt;llvm-profdata;llvm-readelf;llvm-strip;runtimes
     -DLLVM_ENABLE_PROJECTS:STRING=clang;lld;clang-tools-extra
     -DLLVM_ENABLE_RUNTIMES:STRING=compiler-rt;libcxx;libcxxabi;libunwind
     -DLLVM_TARGETS_TO_BUILD:STRING=X86
